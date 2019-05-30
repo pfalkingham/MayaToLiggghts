@@ -17,11 +17,6 @@ float $simMax[] = `getAttr SIMBOX1.boundingBoxMax`;
 float $insMin[] = `getAttr SIMINS1.boundingBoxMin`;
 float $insMax[] = `getAttr SIMINS1.boundingBoxMax`;
 
-if (($insMax[2]+($insMax[2]-$insMin[2])) > $simMax[2])
-{
-  $simMax[2] = $insMax[2]+($insMax[2]-$insMin[2]);
-}   
-
     
 //open output file
 
@@ -86,6 +81,7 @@ fprint $fileId ("pair_style	gran model hertz tangential history cohesion sjkr ta
 fprint $fileId ("pair_coeff	* * 			# applies this interaction to all particle pairs\n\n");
 
 
+//at some point, I should add a check that Maya is set to Z-up
 fprint $fileId ("#----------ADDITIONAL SETTINGS----------#\n");
 fprint $fileId ("fix 		nsph all nve/sphere			# Initialises time integration\n");
 fprint $fileId ("fix		gravi all gravity 9.81 vector 0.0 0.0 -1.0	#Gravity\n");
