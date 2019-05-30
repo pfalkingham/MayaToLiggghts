@@ -1,0 +1,120 @@
+//Get objects
+global proc plfsave_selection_as_stl()
+{
+
+//Get first animation frame translation + rotation
+float $anStart = `playbackOptions -q -minTime`;
+currentTime $anStart;
+
+string $bones[] = `ls -sl`;
+string $input_OBJ;
+
+for ($input_OBJ in $bones)
+{
+	
+    string $buffer[];
+    tokenize $input_OBJ ":" $buffer;
+    string $outputname = $buffer[size($buffer)-1]+".stl";
+    
+    $fileId=`fopen $outputname "w"`; 
+
+	string $stl_StartString = "solid\n";
+
+	string $stl_EndString="endsolid\n";
+						
+	fprint $fileId $stl_StartString;
+
+    
+    int $polyFaceNum[] = `polyEvaluate -f $input_OBJ`;
+	int $polyTriNum[] = `polyEvaluate -t $input_OBJ`;
+		
+	if($polyFaceNum[0] != $polyTriNum[0])
+	{
+		polyTriangulate $input_OBJ;	
+	}
+    int $sizePoly[] =`polyEvaluate -f $input_OBJ`;
+    		// per poly face of poly object
+		for($i = 0; $i < $sizePoly[0]; $i++)
+		{		
+			string $current_Face = ($input_OBJ+".f["+$i+"]");
+							
+			string $faceNoramlInAString[] = `polyInfo -fn $current_Face`;
+			string $faceNoraml[];
+			tokenizeList($faceNoramlInAString[0], $faceNoraml);
+			
+			string $vtxOnTheFaceInAString[] = `polyInfo -fv $current_Face`;
+			string $vtxOnTheFace[];
+			tokenizeList($vtxOnTheFaceInAString[0], $vtxOnTheFace);
+			
+			vector $vtx_A = `mayaExportSTLVertexPos $vtxOnTheFace[2] $input_OBJ`;
+			vector $vtx_B = `mayaExportSTLVertexPos $vtxOnTheFace[3] $input_OBJ`;
+			vector $vtx_C = `mayaExportSTLVertexPos $vtxOnTheFace[4] $input_OBJ`;
+			
+			$stl_perFace=" ";
+			
+			$stl_perFace+="facet normal ";
+			$stl_perFace+=$faceNoraml[2];
+			$stl_perFace+=" ";
+			$stl_perFace+=$faceNoraml[3];
+			$stl_perFace+=" ";
+			$stl_perFace+=$faceNoraml[4];
+			$stl_perFace+="\n";
+			
+			$stl_perFace+="  ";		
+		
+			$stl_perFace+="outer loop";
+			$stl_perFace+="\n";
+			
+			$stl_perFace+="   ";
+			
+			$stl_perFace+="vertex ";
+			$stl_perFace+=($vtx_A.x);
+			$stl_perFace+=" ";
+			$stl_perFace+=($vtx_A.y);
+			$stl_perFace+=" ";
+			$stl_perFace+=($vtx_A.z);
+			$stl_perFace+=" \n";
+					
+			$stl_perFace+="   ";
+			
+			$stl_perFace+="vertex ";
+			$stl_perFace+=($vtx_B.x);
+			$stl_perFace+=" ";
+			$stl_perFace+=($vtx_B.y);
+			$stl_perFace+=" ";
+			$stl_perFace+=($vtx_B.z);
+			$stl_perFace+=" \n";
+					
+			$stl_perFace+="   ";
+				
+			$stl_perFace+="vertex ";
+			$stl_perFace+=($vtx_C.x);
+			$stl_perFace+=" ";
+			$stl_perFace+=($vtx_C.y);
+			$stl_perFace+=" ";
+			$stl_perFace+=($vtx_C.z);
+			$stl_perFace+=" \n";
+					
+			$stl_perFace+="  ";
+			
+			$stl_perFace+="endloop";
+			$stl_perFace+="\n";
+					
+			$stl_perFace+=" ";
+			
+			$stl_perFace+="endfacet";
+			$stl_perFace+="\n";
+			
+			fprint $fileId $stl_perFace;
+        }
+        			fprint $fileId $stl_EndString;
+        	fclose $fileId;
+}
+}
+
+global proc vector mayaExportSTLVertexPos(string $input_ID, string $input_OBJ)
+{
+	vector $output_Pos; 
+	$output_Pos = `pointPosition -w ($input_OBJ+".vtx["+int($input_ID)+"]")`;
+	return $output_Pos;
+}

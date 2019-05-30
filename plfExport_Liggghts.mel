@@ -1,0 +1,31 @@
+global proc plfExport_Liggghts(){
+
+//Script that calls other scripts
+
+//Set scale to m (remembering what it natively is:
+
+string $nativeunit = `currentUnit -q`;
+currentUnit -l "m";
+
+
+//Set time to 1
+currentTime -edit 1;
+
+//exportSTLS
+
+plfsave_selection_as_stl;
+plfsave_tray_as_stl;
+
+//Call first script
+
+plfmaya_liggghts_part1;
+
+//Maya-Liggghts_part2;
+
+plfmaya_liggghts_part2;
+
+ 
+
+//Reset scale
+currentUnit -l $nativeunit;
+}
