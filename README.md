@@ -17,3 +17,10 @@ In Maya, your scene should:
 Select all moving objects + simtray, then run "plfExport_Liggghts;"
 
 You will see moving objects jittering through the full animation sequence.
+
+
+TO-DO:
+
+- For some reason coefficient of restitution ($cr) is not longer recognised by liggghts - need to hardcode for now.
+- remove 'limmitForce on', it's getting put in the wrong places, and never did anything anyway
+- double check if I want sjkr or sjkr2 for material properties (I had issues with sjkr in previous versions of liggghts and mvoed to sjkr2 which is 'stickier'
