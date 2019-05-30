@@ -88,7 +88,7 @@ for ($item in $bones)
     fprint $fileId2 ("fix    "+$cleanName+" all mesh/surface file "+$cleanName+".stl type 1 curvature_tolerant yes\n"); //rotate axis "+$ax+" "+$ay+" "+$az+" angle "+$ang+" move "+$tx+" "+$ty+" "+$tz+"\n");
 }
 
-fprint $fileId2 ("fix cont1 all wall/gran model hertz tangential history mesh n_meshes "+(size($bones)+1)+" meshes tray limitforce on");
+fprint $fileId2 ("fix cont1 all wall/gran model hertz tangential history mesh n_meshes "+(size($bones)+1)+" meshes tray ");
 for ($item in $bones)
 {
     string $buffer[];
