@@ -178,7 +178,7 @@ for ($i;$i<=$anEnd;++$i)
         python($nodeString);
 
         //Get current x, y, z, rotation + translation
-        currentTime ($i-1);
+        currentTime -u 0 ($i-1);  //the -u 0 means it doesn't update the view port.
         $currX = `getAttr -t $i ($item+".translateX")`;
         $currY = `getAttr -t $i ($item+".translateY")`;
         $currZ = `getAttr -t $i ($item+".translateZ")`;
@@ -191,7 +191,7 @@ for ($i;$i<=$anEnd;++$i)
         $prevX = `getAttr ($item+".translateX")`;
         $prevY = `getAttr ($item+".translateY")`;
         $prevZ = `getAttr ($item+".translateZ")`;
-        $prevRX = `getAttr  ($item+".rotateX")`;
+        $prevRX = `getAttr ($item+".rotateX")`;
         $prevRY = `getAttr ($item+".rotateY")`;
         $prevRZ = `getAttr ($item+".rotateZ")`;
 
@@ -206,7 +206,7 @@ for ($i;$i<=$anEnd;++$i)
         
         // get quat directly
         python("quat1 = node.getRotation(quaternion=True)");
-        currentTime($i);
+        currentTime -u 0 ($i);  //I do want to update the viewport here?  Maybe not for every bone/sphere.  Can I put this outside the loop?
         python("quat2 = node.getRotation(quaternion=True)");
 
         //maybe put time back?
@@ -255,7 +255,7 @@ for ($i;$i<=$anEnd;++$i)
     string $cleanName = $buffer[size($buffer)-1];
 
         //have to check ang again as not storing it!
-        currentTime ($i-1);
+        currentTime -u 0 ($i-1);
         $currRX = `getAttr -t $i ($item+".rotateX")`;
         $currRY = `getAttr -t $i ($item+".rotateY")`;
         $currRZ = `getAttr -t $i ($item+".rotateZ")`;
