@@ -153,6 +153,7 @@ float $axisZ;
 
 float $anEnd = `playbackOptions -q -maxTime`;
 int $i = ($anStart+1);
+int $j = $i-1; //time-1
 
 int $p = 0;
 float $rots[]; //this and $p are for storign the actual angle it's moving, so that I can use it in unfixing rotations.
@@ -166,6 +167,7 @@ for ($i;$i<=$anEnd;++$i)
 {
     fprint $fileId2 ("#motions to get to frame "+$i+"\n");
     $p = 0;
+    $j = $i-1;
     for ($item in $bones)
     {
 
@@ -178,7 +180,8 @@ for ($i;$i<=$anEnd;++$i)
         python($nodeString);
 
         //Get current x, y, z, rotation + translation
-        currentTime -u 0 ($i-1);  //the -u 0 means it doesn't update the view port.
+        
+        currentTime -u 0 ($j);  //the -u 0 means it doesn't update the view port.
         $currX = `getAttr -t $i ($item+".translateX")`;
         $currY = `getAttr -t $i ($item+".translateY")`;
         $currZ = `getAttr -t $i ($item+".translateZ")`;
@@ -188,12 +191,12 @@ for ($i;$i<=$anEnd;++$i)
         
         
         //Get previous xyz rot + trans
-        $prevX = `getAttr ($item+".translateX")`;
-        $prevY = `getAttr ($item+".translateY")`;
-        $prevZ = `getAttr ($item+".translateZ")`;
-        $prevRX = `getAttr ($item+".rotateX")`;
-        $prevRY = `getAttr ($item+".rotateY")`;
-        $prevRZ = `getAttr ($item+".rotateZ")`;
+        $prevX = `getAttr -t $j ($item+".translateX")`;
+        $prevY = `getAttr -t $j ($item+".translateY")`;
+        $prevZ = `getAttr -t $j ($item+".translateZ")`;
+        $prevRX = `getAttr -t $j ($item+".rotateX")`;
+        $prevRY = `getAttr -t $j ($item+".rotateY")`;
+        $prevRZ = `getAttr -t $j ($item+".rotateZ")`;
 
         
         //Command Translation
@@ -255,15 +258,15 @@ for ($i;$i<=$anEnd;++$i)
     string $cleanName = $buffer[size($buffer)-1];
 
         //have to check ang again as not storing it!
-        currentTime -u 0 ($i-1);
+        currentTime -u 0 ($j);
         $currRX = `getAttr -t $i ($item+".rotateX")`;
         $currRY = `getAttr -t $i ($item+".rotateY")`;
         $currRZ = `getAttr -t $i ($item+".rotateZ")`;
               
         //Get previous xyz rot + trans
-        $prevRX = `getAttr ($item+".rotateX")`;
-        $prevRY = `getAttr ($item+".rotateY")`;
-        $prevRZ = `getAttr ($item+".rotateZ")`;
+        $prevRX = `getAttr -t $j ($item+".rotateX")`;
+        $prevRY = `getAttr -t $j ($item+".rotateY")`;
+        $prevRZ = `getAttr -t $j ($item+".rotateZ")`;
         
         //calculate rotation since last frame:
         float $diffRX = $currRX - $prevRX;
