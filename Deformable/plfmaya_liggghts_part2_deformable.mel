@@ -307,7 +307,14 @@ for ($i;$i<=$anEnd;++$i)
     }
     fprint $fileId2 ("\n");
     fprint $fileId2 ("dump  dumpstl1 all mesh/vtk $e post/footcomp2_*.vtk id\n"); //and refix the dump.
+    for ($item in $bones)
+    {
+        string $buffer[];
+        tokenize $item ":" $buffer;
+        string $cleanName = $buffer[size($buffer)-1];
+        fprint $fileId2 (" "+$cleanName+" ");
 
+    }
 
 
 
