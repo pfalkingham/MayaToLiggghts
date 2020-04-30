@@ -1,4 +1,5 @@
-global proc plfExport_Liggghts(){
+global proc plfExport_Liggghts_deformable(){
+
 
 //Script that calls other scripts
 
@@ -13,7 +14,7 @@ currentTime -edit 1;
 
 //exportSTLS
 
-plfsave_selection_as_stl;
+plfsave_selection_as_stl_deformable;
 plfsave_tray_as_stl;
 
 //Call first script
@@ -21,8 +22,8 @@ plfsave_tray_as_stl;
 plfmaya_liggghts_part1;
 
 //Maya-Liggghts_part2;
-
-plfmaya_liggghts_part2("static");
+print "stuff?";
+plfmaya_liggghts_part2("deform");
 
  
 

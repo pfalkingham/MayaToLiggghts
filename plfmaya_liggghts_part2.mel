@@ -1,12 +1,12 @@
 //version 20171001-using axis-angle.  I hope.
 
-global proc plfmaya_liggghts_part2()
+global proc plfmaya_liggghts_part2(string $def)
 {
 
 
 
 //Begin by defining framerate etc
-
+global string $gMainProgressBar;
 float $frame_rate = 250;
 float $timestep = 0.000001;  //check this is the same is in output below
 float $timesteps_per_frame = (1/$frame_rate)/$timestep;
@@ -73,6 +73,7 @@ fprint $fileId2 ("fix    tray all mesh/surface file simtray.stl type 1\n");
 //Get first animation frame translation + rotation
 float $anStart = `playbackOptions -q -minTime`;
 currentTime $anStart;
+
 ////For loop for each bone
 
 string $bones[] = `ls -sl`;
@@ -85,9 +86,12 @@ for ($item in $bones)
     tokenize $item ":" $buffer;
     string $cleanName = $buffer[size($buffer)-1];
 
-    fprint $fileId2 ("fix    "+$cleanName+" all mesh/surface file "+$cleanName+".stl type 1 curvature_tolerant yes\n"); //rotate axis "+$ax+" "+$ay+" "+$az+" angle "+$ang+" move "+$tx+" "+$ty+" "+$tz+"\n");
+    if ($def == "deform"){
+            fprint $fileId2 ("fix    "+$cleanName+" all mesh/surface file "+$cleanName+"_"+$anStart+".stl type 1 curvature_tolerant yes\n"); //rotate axis "+$ax+" "+$ay+" "+$az+" angle "+$ang+" move "+$tx+" "+$ty+" "+$tz+"\n");
+    } else {
+        fprint $fileId2 ("fix    "+$cleanName+" all mesh/surface file "+$cleanName+".stl type 1 curvature_tolerant yes\n"); //rotate axis "+$ax+" "+$ay+" "+$az+" angle "+$ang+" move "+$tx+" "+$ty+" "+$tz+"\n");
+    }
 }
-
 fprint $fileId2 ("fix cont1 all wall/gran model hertz tangential history mesh n_meshes "+(size($bones)+1)+" meshes tray ");
 for ($item in $bones)
 {
@@ -102,7 +106,7 @@ fprint $fileId2 ("#--------COMPUTATION----------#\n");
 fprint $fileId2 ("# sets up what will be computed\n");
 fprint $fileId2 ("compute	rke all erotate/sphere\n");
 fprint $fileId2 ("compute 	mudisp all displace/atom\n");
-fprint $fileId2 ("compute	fc all wall/gran/local id pos force\n\n");
+if($def!="deform") fprint $fileId2 ("compute	fc all wall/gran/local id pos force\n\n");
 
 fprint $fileId2 ("#----------DUMP FILES----------#\n");
 fprint $fileId2 ("dump		dmp all custom $e post/dump*.bin id x y z radius\n");  //Add in 'vx vy vz fx fy fz' for forces and velocities
@@ -163,8 +167,16 @@ python("import math"); //move out of loop
 python("import pymel.core as pm");
 python("rotOrder = om.MEulerRotation.kXYZ");   //move out of loop
 
+progressBar -e -bp -ii 1 -status "calculating trasRot..." -max $anEnd $gMainProgressBar;
+
 for ($i;$i<=$anEnd;++$i)
 {
+    if(`progressBar -q -ic $gMainProgressBar`){
+		break;
+	}
+    progressBar -e -s 1 $gMainProgressBar;
+
+
     fprint $fileId2 ("#motions to get to frame "+$i+"\n");
     $p = 0;
     $j = $i-1;
@@ -212,7 +224,7 @@ for ($i;$i<=$anEnd;++$i)
 //        
         // get quat directly
         python("quat1 = node.getRotation(quaternion=True)");
-        currentTime -u 0 ($i);  //I do want to update the viewport here?  Maybe not for every bone/sphere.  Can I put this outside the loop?
+        currentTime ($i);  //I do want to update the viewport here?  Maybe not for every bone/sphere.  Can I put this outside the loop?
         python("quat2 = node.getRotation(quaternion=True)");
 
         //maybe put time back?
@@ -288,9 +300,46 @@ for ($i;$i<=$anEnd;++$i)
         $p = $p+1;
         fprint $fileId2 ("unfix move"+$cleanName+$i+"\n");
     }
+
+//If deforming Replace the meshes!
+    if ($def == "deform"){
+        fprint $fileId2 ("undump dumpstl1\n");   //unfix the dump...
+        fprint $fileId2 ("unfix cont1\n"); //and unfix the contacts
+        for ($item in $bones)
+        {
+
+        string $buffer[];
+        tokenize $item ":" $buffer;
+        string $cleanName = $buffer[size($buffer)-1];
+            fprint $fileId2 ("unfix "+$cleanName+"\n");   //so you can unfix each mesh....
+            fprint $fileId2 ("fix   "+$cleanName+" all mesh/surface file "+$cleanName+"_"+$i+".stl type 1 curvature_tolerant yes\n"); //so you can fix the new mesh
+        }
+        fprint $fileId2 ("fix cont1 all wall/gran model hertz tangential history mesh n_meshes "+(size($bones)+1)+" meshes tray ");
+        for ($item in $bones)
+        {
+            string $buffer[];
+            tokenize $item ":" $buffer;
+            string $cleanName = $buffer[size($buffer)-1];
+            fprint $fileId2 (" "+$cleanName+" ");
+        }
+        fprint $fileId2 ("\n");
+        fprint $fileId2 ("dump  dumpstl1 all mesh/vtk $e post/footcomp2_*.vtk id "); //and refix the dump.
+        for ($item in $bones)
+        {
+            string $buffer[];
+            tokenize $item ":" $buffer;
+            string $cleanName = $buffer[size($buffer)-1];
+            fprint $fileId2 (" "+$cleanName+" ");
+
+        }
+    }
+    fprint $fileId2 ("\n");
+
+	
+
 }
 
-
+progressBar -e -ep $gMainProgressBar;
 
 
 
