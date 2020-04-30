@@ -185,28 +185,31 @@ for ($i;$i<=$anEnd;++$i)
         $currX = `getAttr -t $i ($item+".translateX")`;
         $currY = `getAttr -t $i ($item+".translateY")`;
         $currZ = `getAttr -t $i ($item+".translateZ")`;
-        $currRX = `getAttr -t $i ($item+".rotateX")`;
-        $currRY = `getAttr -t $i ($item+".rotateY")`;
-        $currRZ = `getAttr -t $i ($item+".rotateZ")`;
-        
+//not needed anymore
+        //$currRX = `getAttr -t $i ($item+".rotateX")`;
+        //$currRY = `getAttr -t $i ($item+".rotateY")`;
+        //$currRZ = `getAttr -t $i ($item+".rotateZ")`;
+//
         
         //Get previous xyz rot + trans
         $prevX = `getAttr -t $j ($item+".translateX")`;
         $prevY = `getAttr -t $j ($item+".translateY")`;
         $prevZ = `getAttr -t $j ($item+".translateZ")`;
-        $prevRX = `getAttr -t $j ($item+".rotateX")`;
-        $prevRY = `getAttr -t $j ($item+".rotateY")`;
-        $prevRZ = `getAttr -t $j ($item+".rotateZ")`;
-
+//not needed anymore
+        //$prevRX = `getAttr -t $j ($item+".rotateX")`;
+        //$prevRY = `getAttr -t $j ($item+".rotateY")`;
+        //$prevRZ = `getAttr -t $j ($item+".rotateZ")`;
+//
         
         //Command Translation
         fprint $fileId2 ("fix    move"+$cleanName+$i+" all move/mesh mesh "+$cleanName+" linear "+($currX-$prevX)*$frame_rate+" "+($currY-$prevY)*$frame_rate+" "+($currZ-$prevZ)*$frame_rate+"\n");
         
         //calculate rotation since last frame:
-        float $diffRX = $currRX - $prevRX;
-        float $diffRY = $currRY - $prevRY;
-        float $diffRZ = $currRZ - $prevRZ;
-        
+//not needed anymore
+        //float $diffRX = $currRX - $prevRX;
+        //float $diffRY = $currRY - $prevRY;
+        //float $diffRZ = $currRZ - $prevRZ;
+//        
         // get quat directly
         python("quat1 = node.getRotation(quaternion=True)");
         currentTime -u 0 ($i);  //I do want to update the viewport here?  Maybe not for every bone/sphere.  Can I put this outside the loop?
@@ -257,22 +260,24 @@ for ($i;$i<=$anEnd;++$i)
     tokenize $item ":" $buffer;
     string $cleanName = $buffer[size($buffer)-1];
 
+
         //have to check ang again as not storing it!
         currentTime -u 0 ($j);
-        $currRX = `getAttr -t $i ($item+".rotateX")`;
-        $currRY = `getAttr -t $i ($item+".rotateY")`;
-        $currRZ = `getAttr -t $i ($item+".rotateZ")`;
+//not needed anymore
+        //$currRX = `getAttr -t $i ($item+".rotateX")`;
+        //$currRY = `getAttr -t $i ($item+".rotateY")`;
+        //$currRZ = `getAttr -t $i ($item+".rotateZ")`;
               
         //Get previous xyz rot + trans
-        $prevRX = `getAttr -t $j ($item+".rotateX")`;
-        $prevRY = `getAttr -t $j ($item+".rotateY")`;
-        $prevRZ = `getAttr -t $j ($item+".rotateZ")`;
+        //$prevRX = `getAttr -t $j ($item+".rotateX")`;
+        //$prevRY = `getAttr -t $j ($item+".rotateY")`;
+        //$prevRZ = `getAttr -t $j ($item+".rotateZ")`;
         
         //calculate rotation since last frame:
-        float $diffRX = $currRX - $prevRX;
-        float $diffRY = $currRY - $prevRY;
-        float $diffRZ = $currRZ - $prevRZ;
-        
+        //float $diffRX = $currRX - $prevRX;
+        //float $diffRY = $currRY - $prevRY;
+        //float $diffRZ = $currRZ - $prevRZ;
+//        
 
         //do y
         if ($rots[$p] != 0)
