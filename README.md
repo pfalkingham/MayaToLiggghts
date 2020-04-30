@@ -15,7 +15,7 @@ In Maya, your scene should:
  - Have a box around the entire simulation domain called "SIMBOX1" - this must include full extents of any moving object.
  - Moving object(s)
   
-Select all moving objects, then run "plfExport_Liggghts;"
+Select all moving objects, then run "plfExport_Liggghts;" or "plfExport_Liggghts_deformable;"
 
 You will see moving objects jittering through the full animation sequence.
 
