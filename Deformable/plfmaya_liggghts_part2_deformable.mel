@@ -85,7 +85,7 @@ for ($item in $bones)
     tokenize $item ":" $buffer;
     string $cleanName = $buffer[size($buffer)-1];
 
-    fprint $fileId2 ("fix    "+$cleanName+" all mesh/surface file "+$cleanName+"_1.stl type 1 curvature_tolerant yes\n"); //rotate axis "+$ax+" "+$ay+" "+$az+" angle "+$ang+" move "+$tx+" "+$ty+" "+$tz+"\n");
+    fprint $fileId2 ("fix    "+$cleanName+" all mesh/surface file "+$cleanName+"_"+$anStart+".stl type 1 curvature_tolerant yes\n"); //rotate axis "+$ax+" "+$ay+" "+$az+" angle "+$ang+" move "+$tx+" "+$ty+" "+$tz+"\n");
 }
 
 fprint $fileId2 ("fix cont1 all wall/gran model hertz tangential history mesh n_meshes "+(size($bones)+1)+" meshes tray ");
@@ -156,7 +156,7 @@ int $i = ($anStart+1);
 int $j = $i-1; //time-1
 
 int $p = 0;
-float $rots[]; //this and $p are for storign the actual angle it's moving, so that I can use it in unfixing rotations.
+float $rots[]; //this and $p are for storing the actual angle it's moving, so that I can use it in unfixing rotations.
 
 python("import maya.OpenMaya as om");  //move out of loop
 python("import math"); //move out of loop
@@ -185,27 +185,30 @@ for ($i;$i<=$anEnd;++$i)
         $currX = `getAttr -t $i ($item+".translateX")`;
         $currY = `getAttr -t $i ($item+".translateY")`;
         $currZ = `getAttr -t $i ($item+".translateZ")`;
-        $currRX = `getAttr -t $i ($item+".rotateX")`;
-        $currRY = `getAttr -t $i ($item+".rotateY")`;
-        $currRZ = `getAttr -t $i ($item+".rotateZ")`;
+//30/4/20 - i don't think these are used anymore, so can go.
+        //$currRX = `getAttr -t $i ($item+".rotateX")`;
+        //$currRY = `getAttr -t $i ($item+".rotateY")`;
+        //$currRZ = `getAttr -t $i ($item+".rotateZ")`;
         
         
         //Get previous xyz rot + trans
         $prevX = `getAttr -t $j ($item+".translateX")`;
         $prevY = `getAttr -t $j ($item+".translateY")`;
         $prevZ = `getAttr -t $j ($item+".translateZ")`;
-        $prevRX = `getAttr -t $j ($item+".rotateX")`;
-        $prevRY = `getAttr -t $j ($item+".rotateY")`;
-        $prevRZ = `getAttr -t $j ($item+".rotateZ")`;
-
+//30/4/20 - i don't think these are used anymore, so can go.
+        //$prevRX = `getAttr -t $j ($item+".rotateX")`;
+        //$prevRY = `getAttr -t $j ($item+".rotateY")`;
+        //$prevRZ = `getAttr -t $j ($item+".rotateZ")`;
+//
         
         //Command Translation
         fprint $fileId2 ("fix    move"+$cleanName+$i+" all move/mesh mesh "+$cleanName+" linear "+($currX-$prevX)*$frame_rate+" "+($currY-$prevY)*$frame_rate+" "+($currZ-$prevZ)*$frame_rate+"\n");
         
         //calculate rotation since last frame:
-        float $diffRX = $currRX - $prevRX;
-        float $diffRY = $currRY - $prevRY;
-        float $diffRZ = $currRZ - $prevRZ;
+        //30/4/20 - i don't think these are used anymore, so can go.
+        //float $diffRX = $currRX - $prevRX;
+        //float $diffRY = $currRY - $prevRY;
+        //float $diffRZ = $currRZ - $prevRZ;
         
         // get quat directly
         python("quat1 = node.getRotation(quaternion=True)");
@@ -257,23 +260,26 @@ for ($i;$i<=$anEnd;++$i)
     tokenize $item ":" $buffer;
     string $cleanName = $buffer[size($buffer)-1];
 
+
+//30/4/20 - i don't think these are used anymore, so can go.
         //have to check ang again as not storing it!
         currentTime -u 0 ($j);
-        $currRX = `getAttr -t $i ($item+".rotateX")`;
-        $currRY = `getAttr -t $i ($item+".rotateY")`;
-        $currRZ = `getAttr -t $i ($item+".rotateZ")`;
+        //$currRX = `getAttr -t $i ($item+".rotateX")`;
+        //$currRY = `getAttr -t $i ($item+".rotateY")`;
+        //$currRZ = `getAttr -t $i ($item+".rotateZ")`;
               
         //Get previous xyz rot + trans
-        $prevRX = `getAttr -t $j ($item+".rotateX")`;
-        $prevRY = `getAttr -t $j ($item+".rotateY")`;
-        $prevRZ = `getAttr -t $j ($item+".rotateZ")`;
+        //$prevRX = `getAttr -t $j ($item+".rotateX")`;
+        //$prevRY = `getAttr -t $j ($item+".rotateY")`;
+        //$prevRZ = `getAttr -t $j ($item+".rotateZ")`;
         
         //calculate rotation since last frame:
-        float $diffRX = $currRX - $prevRX;
-        float $diffRY = $currRY - $prevRY;
-        float $diffRZ = $currRZ - $prevRZ;
+        //30/4/20 - i don't think these are used anymore, so can go.
+        //float $diffRX = $currRX - $prevRX;
+        //float $diffRY = $currRY - $prevRY;
+        //float $diffRZ = $currRZ - $prevRZ;
         
-
+//
         //do y
         if ($rots[$p] != 0)
         {
@@ -306,7 +312,7 @@ for ($i;$i<=$anEnd;++$i)
         fprint $fileId2 (" "+$cleanName+" ");
     }
     fprint $fileId2 ("\n");
-    fprint $fileId2 ("dump  dumpstl1 all mesh/vtk $e post/footcomp2_*.vtk id\n"); //and refix the dump.
+    fprint $fileId2 ("dump  dumpstl1 all mesh/vtk $e post/footcomp2_*.vtk id "); //and refix the dump.
     for ($item in $bones)
     {
         string $buffer[];
@@ -315,7 +321,7 @@ for ($i;$i<=$anEnd;++$i)
         fprint $fileId2 (" "+$cleanName+" ");
 
     }
-
+    fprint $fileId2 ("\n");
 
 
 }
