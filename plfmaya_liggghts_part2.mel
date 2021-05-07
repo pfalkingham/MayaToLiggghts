@@ -76,7 +76,7 @@ currentTime $anStart;
 
 ////For loop for each bone
 
-string $bones[] = `ls -sl`;
+string $bones[] = `ls -sl -tr`;  //just get transform nodes to avoid bug
 string $item;
 
 for ($item in $bones)
