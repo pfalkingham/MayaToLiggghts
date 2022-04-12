@@ -118,7 +118,7 @@ fprint $fileId ("    run 100000 pre no post no # Run so many steps until we chec
 fprint $fileId ("\n");    
 fprint $fileId ("    if \"${my_ke}<${ke_tol} || ${curstep}>${toomany}\" then &\n");
 fprint $fileId ("        \"jump setup.liggghts end_set_loop\" &\n");
-fprint $fileId ("    else &
+fprint $fileId ("    else &\n");
 fprint $fileId ("        \"jump setup.liggghts begin_set_loop\"\n"); 
 fprint $fileId ("label end_set_loop # End of the loop\n");
 
