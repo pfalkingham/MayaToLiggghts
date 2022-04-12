@@ -25,9 +25,10 @@ TO-DO:
 - For some reason coefficient of restitution ($cr) is not longer recognised by liggghts - need to hardcode for now.  <-- I think this is because I already have a variable 'c' and it's using that?
 - double check if I want sjkr or sjkr2 for material properties (I had issues with sjkr in previous versions of liggghts and moved to sjkr2 which is 'stickier'
 
-IF YOU USE THESE SCRIPTS, PLEASE CITE THE FOLLOWING PAPERS (which were instrumental in the development of these scripts):
-Falkingham, P.L. and Gatesy, S.M., 2014. The birth of a dinosaur footprint: subsurface 3D motion reconstruction and discrete element simulation reveal track ontogeny. Proceedings of the National Academy of Sciences, 111(51), pp.18279-18284.
+_____
+**IF YOU USE THESE SCRIPTS, PLEASE CITE THE FOLLOWING PAPERS (which were instrumental in the development of these scripts):
+- Falkingham, P.L. and Gatesy, S.M., 2014. The birth of a dinosaur footprint: subsurface 3D motion reconstruction and discrete element simulation reveal track ontogeny. Proceedings of the National Academy of Sciences, 111(51), pp.18279-18284.
 
-Falkingham, P.L., Turner, M.L. and Gatesy, S.M., 2020. Constructing and testing hypotheses of dinosaur foot motions from fossil tracks using digitization and simulation. Palaeontology, 63(6), pp.865-880.
+- Falkingham, P.L., Turner, M.L. and Gatesy, S.M., 2020. Constructing and testing hypotheses of dinosaur foot motions from fossil tracks using digitization and simulation. Palaeontology, 63(6), pp.865-880.
 
-Hatala, K.G., Gatesy, S.M. and Falkingham, P.L., 2021. Integration of biplanar X-ray, three-dimensional animation and particle simulation reveals details of human ‘track ontogeny’. Interface focus, 11(5), p.20200075.
+- Hatala, K.G., Gatesy, S.M. and Falkingham, P.L., 2021. Integration of biplanar X-ray, three-dimensional animation and particle simulation reveals details of human ‘track ontogeny’. Interface focus, 11(5), p.20200075.
