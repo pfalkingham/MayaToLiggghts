@@ -109,7 +109,7 @@ fprint $fileId2 ("compute 	mudisp all displace/atom\n");
 if($def!="deform") fprint $fileId2 ("compute	fc all wall/gran/local id pos force\n\n");
 
 fprint $fileId2 ("#----------DUMP FILES----------#\n");
-fprint $fileId2 ("dump		dmp all custom $e post/dump*.bin id x y z radius\n");  //Add in 'vx vy vz fx fy fz' for forces and velocities
+fprint $fileId2 ("dump		dmp all custom $e post/dump*.txt id x y z radius\n");  //Add in 'vx vy vz fx fy fz' for forces and velocities
 fprint $fileId2 ("dump 	    dumpstl1 all mesh/vtk $e post/footcomp2_*.vtk id");
 for ($item in $bones)
 {
