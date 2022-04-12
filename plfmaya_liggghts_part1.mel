@@ -106,7 +106,25 @@ fprint $fileId ("#----------RUN SPECIFICS----------#\n");
 fprint $fileId ("#Fill simtray\n");
 fprint $fileId ("run 200000\n");
 fprint $fileId ("unfix ins\n");
-fprint $fileId ("run 100000\n");
+
+fprint $fileId ("#----------Run until stable-------#\n");
+fprint $fileId ("variable my_ke   equal ke\n");
+fprint $fileId ("variable ke_tol  equal 0.000005\n");
+fprint $fileId ("variable curstep equal step\n");
+fprint $fileId ("variable toomany equal 100000\n");
+fprint $fileId ("label begin_set_loop # Start of the loop\n");
+fprint $fileId ("    print \"my_ke: ${my_ke}, ke_tol: ${ke_tol}\"\n");
+fprint $fileId ("    run 100000 pre no post no # Run so many steps until we check the KE again\n");
+fprint $fileId ("\n");    
+fprint $fileId ("    if \"${my_ke}<${ke_tol} || ${curstep}>${toomany}\" then &\n");
+fprint $fileId ("        \"jump setup.liggghts end_set_loop\" &\n");
+fprint $fileId ("    else &
+fprint $fileId ("        \"jump setup.liggghts begin_set_loop\"\n"); 
+fprint $fileId ("label end_set_loop # End of the loop\n");
+
+
+
+
 //fprint $fileId ("undump dumpstl\n");
 fprint $fileId ("unfix cont\n");
 fprint $fileId ("unfix simtray\n");
